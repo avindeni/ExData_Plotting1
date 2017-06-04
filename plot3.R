@@ -1,0 +1,31 @@
+plot3 <- function() {
+
+#power<-read.table("household_power_consumption.csv",sep=";",head=TRUE)
+
+date_power<-power[which(power$Date=="1/2/2007" | power$Date=="2/2/2007"),]
+
+meter1<-as.vector(date_power$Sub_metering_1)
+meter2<-as.vector(date_power$Sub_metering_2)
+meter3<-as.vector(date_power$Sub_metering_3)
+
+remove<-c("?")
+clean_meter1<-as.numeric(meter1 [! meter1 %in% remove])
+clean_meter2<-as.numeric(meter2 [! meter2 %in% remove])
+clean_meter3<-as.numeric(meter3 [! meter3 %in% remove])
+
+time_power<-date_power$Time
+time_power<-as.vector(time_power)
+day_ticks<-which(time_power=="00:00:00")
+day_ticks<-c(day_ticks,length(time_power))
+
+jpeg('plot3.jpg')
+plot(clean_meter1,xaxt="n",type="n",xlab="",ylab="Energy sub metering")
+ticks<-c("Thu","Fri","Sat")
+axis(1,at=day_ticks,labels=ticks)
+points(clean_meter1,col = "black",type="s")
+points(clean_meter2,col = "red",type="s")
+points(clean_meter3,col = "blue",type="s")
+legend("topright",legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),col=c("black","red","blue"),lty=c(1,1))
+dev.off()
+
+}
